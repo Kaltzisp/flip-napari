@@ -1,0 +1,11 @@
+name: flip-napari
+display_name: FLIP Napari
+visibility: public
+contributions:
+  commands:
+    - id: flip-napari.create_widget_3d
+      python_name: flip_napari:widget_3d
+      title: FLIP 3D Analysis
+  widgets:
+    - command: flip-napari.create_widget_3d
+      display_name: 3D Analysis
