@@ -1,0 +1,6 @@
+# Python build files.
+*pycache*
+*egg*
+
+# Data files.
+Test*
