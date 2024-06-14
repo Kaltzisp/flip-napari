@@ -1,0 +1,17 @@
+[project]
+name = "flip-napari"
+dynamic = ["version"]
+description = "FLIP Napari Plugin"
+readme = "README.md"
+authors = [
+  {name = "Peter Kaltzis"},
+  {email = "peterkaltzis@outlook.com"},
+]
+requires-python = ">=3.12"
+
+[project.entry-points."napari.manifest"]
+flip-napari = "flip_napari:napari.yaml"
+
+[build-system]
+requires = ["setuptools>=42.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
