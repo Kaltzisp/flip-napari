@@ -1,7 +1,7 @@
 [project]
 name = "flip-napari"
 dynamic = ["version"]
-description = "FLIP Napari Plugin"
+description = "FLIP Napari"
 readme = "README.md"
 authors = [
   {name = "Peter Kaltzis"},

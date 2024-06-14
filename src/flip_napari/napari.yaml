@@ -1,11 +1,16 @@
 name: flip-napari
-display_name: FLIP Napari
+display_name: del Monte-Nieto Lab
 visibility: public
 contributions:
   commands:
+    - id: flip-napari.segment_nuclei
+      python_name: flip_napari:segment_nuclei
+      title: segment_nuclei
     - id: flip-napari.create_widget_3d
       python_name: flip_napari:widget_3d
-      title: FLIP 3D Analysis
+      title: analyser
   widgets:
+    - command: flip-napari.segment_nuclei
+      display_name: Segment Nuclei
     - command: flip-napari.create_widget_3d
       display_name: 3D Analysis
