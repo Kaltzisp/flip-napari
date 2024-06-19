@@ -1,18 +1,34 @@
-import os
-import napari
-import tifffile
-from .modules import segmentation
 from magicgui import magic_factory
+from .utils import Timer, Widgets
+import tifffile
+from cellpose.models import Cellpose
+from os import path
+from napari import current_viewer
 
 
 @magic_factory(
-    image_path={"widget_type": "FileEdit", "tooltip": "path to the nuclear image for segmentation"},
+    image_path=Widgets.FileWidget("nuclear image", "path to the image to be segmented"),
+    diameter=Widgets.TextWidget("cell diameter", "approximate diameter of cells to be segmented (leave blank to calculate automatically)"),
+    prob_threshold=Widgets.FloatWidget("prob threshold", "cell probability threshold (set lower for more and larger cells)", -8.0, 8.0, 0.2, 0),
 )
-def segment_nuclei(image_path):
-    image = tifffile.imread(image_path)
-    labels = segmentation.get_nuclei_labels(image)
-    tifffile.imwrite(os.path.join(os.path.dirname(image_path), "label.tif"), labels)
-    viewer = napari.current_viewer()
+def segment_nuclei(image_path, diameter, prob_threshold):
+    timer = Timer("nuclear segmentation")
+
+    # Creating label image.
+    nuclei_image = tifffile.imread(image_path)
+    model = Cellpose(gpu=True, model_type="nuclei")
+    label_image, flows, styles, diams = model.eval(
+        nuclei_image,
+        do_3D=True,
+        diameter=float(diameter) if diameter else 0,
+        cellprob_threshold=prob_threshold
+    )
+
+    # Saving and adding to viewer.
+    tifffile.imwrite(path.join(path.dirname(image_path), "label.tif"), label_image)
+    viewer = current_viewer()
     viewer.dims.ndisplay = 2
-    viewer.add_image(image)
-    viewer.add_labels(labels)
+    viewer.add_image(nuclei_image)
+    viewer.add_labels(label_image)
+
+    timer.print_duration()
