@@ -1,9 +1,6 @@
 from cellpose import models
-import tifffile
 from .utils import Timer
 
-from skimage.measure import regionprops
-import numpy as np
 
 def get_nuclei_labels(nuclei_image):
     timer = Timer("segmentation")

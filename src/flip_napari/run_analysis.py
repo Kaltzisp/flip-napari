@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from skimage.measure import regionprops_table
 
+
 @magic_factory(
     labels_image={"widget_type": "FileEdit", "tooltip": "path to the nuclei label image"},
     intensity_image={"widget_type": "FileEdit", "tooltip": "path to the intensity (marker) image"},

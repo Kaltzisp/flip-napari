@@ -4,6 +4,7 @@ import tifffile
 from .modules import segmentation
 from magicgui import magic_factory
 
+
 @magic_factory(
     image_path={"widget_type": "FileEdit", "tooltip": "path to the nuclear image for segmentation"},
 )
