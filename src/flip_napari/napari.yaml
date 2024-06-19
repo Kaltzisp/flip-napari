@@ -13,4 +13,4 @@ contributions:
     - command: flip-napari.segment_nuclei
       display_name: Segment Nuclei
     - command: flip-napari.run_analysis
-      display_name: Run Analysis
+      display_name: Marker Analysis
