@@ -6,11 +6,11 @@ contributions:
     - id: flip-napari.segment_nuclei
       python_name: flip_napari:segment_nuclei
       title: segment_nuclei
-    - id: flip-napari.create_widget_3d
-      python_name: flip_napari:widget_3d
-      title: analyser
+    - id: flip-napari.run_analysis
+      python_name: flip_napari:run_analysis
+      title: run_analysis
   widgets:
     - command: flip-napari.segment_nuclei
       display_name: Segment Nuclei
-    - command: flip-napari.create_widget_3d
-      display_name: 3D Analysis
+    - command: flip-napari.run_analysis
+      display_name: Run Analysis
