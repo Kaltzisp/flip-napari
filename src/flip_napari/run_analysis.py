@@ -1,4 +1,5 @@
 import os
+import napari
 import tifffile
 from magicgui import magic_factory
 
@@ -10,7 +11,7 @@ from skimage.measure import regionprops_table
     labels_image={"widget_type": "FileEdit", "tooltip": "path to the nuclei label image"},
     intensity_image={"widget_type": "FileEdit", "tooltip": "path to the intensity (marker) image"},
     masks_image={"widget_type": "FileEdit", "tooltip": "path to the Amira masks file"},
-    threshold={"widget_type": "FloatSlider", "max": 1, "tooltip": "threshold for determining marker activity"},
+    threshold={"widget_type": "FloatSlider", "value": 0.3, "max": 1, "tooltip": "threshold for determining marker activity"},
     target_tissues={"widget_type": "LineEdit", "value": "", "tooltip": "tissues to include in the created activity label image"},
     call_button="Run Segmentation"
 )
@@ -41,14 +42,23 @@ def run_analysis(labels_image, intensity_image, masks_image, threshold, target_t
     })
     result.to_csv(os.path.join(os.path.dirname(labels_image), "data_summary.csv"))
 
+    # Adding to viewer.
+    viewer = napari.current_viewer()
+    viewer.dims.ndisplay = 2
+    viewer.add_image(marker)
+    viewer.add_labels(amira_masks)
+    viewer.add_labels(labels)
+
     # Creating marker image.
-    selected_indexes = [int(i) for i in target_tissues.split(",")]
-    marker_image = np.zeros(labels.shape + (3,), dtype=np.uint8)
-    for label in df.itertuples(index=True):
-        print(str(round(100 * label.Index / len(df), 1)) + " %")
-        if (label.tissue in selected_indexes):
-            if (label.intensity_mean >= 255 * threshold):
-                marker_image[labels == label.label] = [200, 0, 0]
-            else:
-                marker_image[labels == label.label] = [0, 0, 200]
-    tifffile.imwrite(os.path.join(os.path.dirname(labels_image), "label_marker.tif"), marker_image)
+    if len(target_tissues) > 0:
+        selected_indexes = [int(i) for i in target_tissues.split(",")]
+        marker_image = np.zeros(labels.shape + (3,), dtype=np.uint8)
+        for label in df.itertuples(index=True):
+            print(str(round(100 * label.Index / len(df), 1)) + " %")
+            if (label.tissue in selected_indexes):
+                if (label.intensity_mean >= 255 * threshold):
+                    marker_image[labels == label.label] = [200, 0, 0]
+                else:
+                    marker_image[labels == label.label] = [0, 0, 200]
+        tifffile.imwrite(os.path.join(os.path.dirname(labels_image), "label_marker.tif"), marker_image)
+        viewer.add_image(marker_image)
