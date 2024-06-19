@@ -25,7 +25,7 @@ def segment_nuclei(image_path, diameter, prob_threshold):
     )
 
     # Saving and adding to viewer.
-    tifffile.imwrite(path.join(path.dirname(image_path), "label.tif"), label_image)
+    tifffile.imwrite(path.join(path.dirname(image_path), "label_nuclei.tif"), label_image)
     viewer = current_viewer()
     viewer.dims.ndisplay = 2
     viewer.add_image(nuclei_image)
