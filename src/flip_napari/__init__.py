@@ -1,6 +1,8 @@
 __version__ = "0.0.1"
-from ._widget import widget_3d
+from .segment_nuclei import segment_nuclei
+from .run_analysis import run_analysis
 
 __all__ = (
-    "widget_3d"
+    "segment_nuclei",
+    "run_analysis"
 )
