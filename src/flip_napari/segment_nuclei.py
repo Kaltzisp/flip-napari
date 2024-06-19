@@ -9,7 +9,7 @@ from napari import current_viewer
 @magic_factory(
     image_path=Widgets.FileWidget("nuclear image", "path to the image to be segmented"),
     diameter=Widgets.TextWidget("cell diameter", "approximate diameter of cells to be segmented (leave blank to calculate automatically)"),
-    prob_threshold=Widgets.FloatWidget("prob threshold", "cell probability threshold (set lower for more and larger cells)", -8.0, 8.0, 0.2, 0),
+    prob_threshold=Widgets.FloatWidget("prob threshold", "cell probability threshold (set lower for more and larger cells)", -8.0, 8.0, 0.2, 0)
 )
 def segment_nuclei(image_path, diameter, prob_threshold):
     timer = Timer("nuclear segmentation")
