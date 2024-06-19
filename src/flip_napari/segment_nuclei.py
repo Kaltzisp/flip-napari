@@ -29,6 +29,6 @@ def segment_nuclei(image_path, diameter, prob_threshold):
     viewer = current_viewer()
     viewer.dims.ndisplay = 2
     viewer.add_image(nuclei_image)
-    viewer.add_labels(label_image)
+    viewer.add_labels(label_image, opacity=0.75)
 
     timer.print_duration()
