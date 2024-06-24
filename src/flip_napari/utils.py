@@ -3,17 +3,29 @@ from napari.utils import notifications
 
 
 class Timer:
-    def __init__(self, name):
-        self.start_time = time.time()
-        self.name = name
+    def __init__(self, message):
+        self.spawn_time = time.time()
+        self.restart(message)
 
-    def print_duration(self):
-        start_time = int(self.start_time)
+    def restart(self, message):
+        self.start_time = time.time()
+        notifications.show_info(message + "...")
+
+    @staticmethod
+    def get_elapsed(start_time):
+        start_time = int(start_time)
         end_time = int(time.time())
         minutes = (end_time - start_time) // 60
         seconds = (end_time - start_time) % 60
-        elapsed_time = f"Completed {self.name} in {minutes:02}mins {seconds}secs"
-        notifications.show_info(elapsed_time)
+        return f"{minutes:02}mins {seconds}secs"
+
+    def print_duration(self):
+        message = Timer.get_elapsed(self.start_time)
+        notifications.show_info("Time taken: " + message)
+
+    def end(self):
+        message = Timer.get_elapsed(self.spawn_time)
+        notifications.show_info("Completed in: " + message)
 
 
 class Widgets:
