@@ -15,6 +15,7 @@ from napari import current_viewer
     intensity_image_path=Widgets.FileWidget("intensity image", "path to the intensity image (for cropping)"),
 )
 def segment_nuclei(image_path, diameter, prob_threshold, masks_image_path, intensity_image_path):
+
     # Opening images.
     timer = Timer("Opening images")
     nuclei_image = tifffile.imread(image_path)

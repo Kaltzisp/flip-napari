@@ -19,15 +19,16 @@ from vispy.color import Colormap
     target_tissues=Widgets.TextWidget("target tissues", "indexes of tissues to include in the generated red/blue activity label")
 )
 def run_analysis(label_image_path, intensity_image_path, masks_image_path, threshold, min_diameter, target_tissues):
-    timer = Timer("marker analysis")
 
     # Opening images and getting path.
+    timer = Timer("Opening images")
     label_image = tifffile.imread(label_image_path)
     intensity_image = tifffile.imread(intensity_image_path)
     masks_image = tifffile.imread(masks_image_path)
     save_dir = path.dirname(label_image_path)
 
     # Getting label data.
+    timer.restart("Getting quantifications")
     df = DataFrame(regionprops_table(label_image, intensity_image=intensity_image, properties=["label", "intensity_mean", "centroid", "area"]))
     df["tissue"] = masks_image[df["centroid-0"].astype(int), df["centroid-1"].astype(int), df["centroid-2"].astype(int)]
     df.to_csv(path.join(save_dir, "data_full.csv"))
@@ -60,6 +61,7 @@ def run_analysis(label_image_path, intensity_image_path, masks_image_path, thres
 
     # Creating activity label.
     if len(target_tissues) > 0:
+        timer.restart("Creating activity label")
         selected_indexes = [int(i) for i in target_tissues.split(",")]
         activity_label = np.zeros_like(label_image)
         for label in df.itertuples(index=True):
@@ -74,4 +76,4 @@ def run_analysis(label_image_path, intensity_image_path, masks_image_path, thres
         # Creating color map and adding to viewer.
         viewer.add_image(activity_label, opacity=0.75, colormap=Colormap(["transparent", "blue", "red"]))
 
-    timer.print_duration()
+    timer.end()
