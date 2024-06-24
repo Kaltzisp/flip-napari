@@ -11,17 +11,19 @@ from napari import current_viewer
     image_path=Widgets.FileWidget("nuclear image", "path to the image to be segmented"),
     diameter=Widgets.TextWidget("cell diameter", "approximate diameter of cells to be segmented (leave blank to calculate automatically)"),
     prob_threshold=Widgets.FloatWidget("prob threshold", "cell probability threshold (set lower for more and larger cells)", -8.0, 8.0, 0.2, 0),
-    mask_path=Widgets.FileWidget("cropping mask", "path to the amira mask to use for cropping of the cardiac regoin"),
+    masks_image_path=Widgets.FileWidget("cropping mask", "path to the amira mask to use for cropping of the cardiac region"),
+    intensity_image_path=Widgets.FileWidget("intensity image", "path to the intensity image (for cropping)"),
 )
-def segment_nuclei(image_path, diameter, prob_threshold, mask_path):
+def segment_nuclei(image_path, diameter, prob_threshold, masks_image_path, intensity_image_path):
     # Opening images.
     timer = Timer("Opening images")
     nuclei_image = tifffile.imread(image_path)
-    amira_mask = tifffile.imread(mask_path)
+    masks_image = tifffile.imread(masks_image_path)
+    intensity_image = tifffile.imread(intensity_image_path)
 
     # Clearning extraneous data from image.
     timer.restart("Cropping nuclear image")
-    mask = amira_mask != amira_mask[0, 0, 0]
+    mask = masks_image != masks_image[0, 0, 0]
     nuclei_image = nuclei_image * mask
 
     # Cropping nuclear image.
@@ -33,7 +35,12 @@ def segment_nuclei(image_path, diameter, prob_threshold, mask_path):
         lower_bound[1]:upper_bound[1],
         lower_bound[2]:upper_bound[2]]
     tifffile.imwrite(path.join(path.dirname(image_path), "nuclei_cropped.tif"), nuclei_image)
-    del amira_mask, mask, mask_indices
+    intensity_image = intensity_image[
+        lower_bound[0]:upper_bound[0],
+        lower_bound[1]:upper_bound[1],
+        lower_bound[2]:upper_bound[2]]
+    tifffile.imwrite(path.join(path.dirname(image_path), "marker_cropped.tif"), intensity_image)
+    del masks_image, mask, mask_indices, intensity_image
     timer.print_duration()
 
     # Creating label image.
