@@ -34,12 +34,17 @@ def segment_nuclei(image_path, diameter, prob_threshold, masks_image_path, inten
         lower_bound[0]:upper_bound[0],
         lower_bound[1]:upper_bound[1],
         lower_bound[2]:upper_bound[2]]
-    tifffile.imwrite(path.join(path.dirname(image_path), "nuclei_cropped.tif"), nuclei_image)
+    tifffile.imwrite(path.join(path.dirname(image_path), "cropped_nuclei.tif"), nuclei_image)
     intensity_image = intensity_image[
         lower_bound[0]:upper_bound[0],
         lower_bound[1]:upper_bound[1],
         lower_bound[2]:upper_bound[2]]
-    tifffile.imwrite(path.join(path.dirname(image_path), "marker_cropped.tif"), intensity_image)
+    tifffile.imwrite(path.join(path.dirname(image_path), "cropped_marker.tif"), intensity_image)
+    masks_image = masks_image[
+        lower_bound[0]:upper_bound[0],
+        lower_bound[1]:upper_bound[1],
+        lower_bound[2]:upper_bound[2]]
+    tifffile.imwrite(path.join(path.dirname(image_path), "cropped_masks.tif"), masks_image)
     del masks_image, mask, mask_indices, intensity_image
     timer.print_duration()
 
